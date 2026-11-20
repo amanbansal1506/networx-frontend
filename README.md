@@ -57,27 +57,6 @@ flowchart LR
     G --> I["Return feed"]
 ```
 
-## 📸 Application Screenshots
-
-### 🔐 Login
-Secure login system for users before accessing the portal.
-
-![Login](Screenshots/sign-in.png)
-
----
-
-### 🏠 Landing Page
-Clean and minimal landing page.
-
-![Home](Screenshots/home-page.png)
-
----
-
-### 💬 Sign Up
-Users enter details to create an account on the portal.
-
-![Sign up](Screenshots/sign-up.png)
-
 ## ⚡ Redis: Caching, Realtime Signals, and Feed Acceleration
 
 From 2 Feb 2026 onwards, Redis is used in NetworX as a high-speed, in-memory layer to reduce PostgreSQL load, accelerate feed reads, and power short-lived realtime signals without writing transient state to the database.
