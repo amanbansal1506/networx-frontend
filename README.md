@@ -12,9 +12,6 @@
 ![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?logo=springboot&logoColor=white)
 
-</div>
-
-
 
 ### 🔗 Project Links
 
@@ -25,6 +22,7 @@
 ⚙️ **[Backend Repository](https://github.com/amanbansal1506/networx-backend)**
 
 ---
+</div>
 
 ## 📖 Project Overview
 
