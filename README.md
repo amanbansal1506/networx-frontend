@@ -2,7 +2,7 @@
 
 # 🌐 NetworX — Professional Networking Platform
 
-**A full-stack social networking application built to explore real-world backend and full-stack concepts: users, connections, posts, messaging, and conversations.**
+**NetworX** is a full-stack professional networking application inspired by platforms like LinkedIn. It enables users to create professional profiles, share updates, interact with posts, and connect with other users.
 
 ![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white)
@@ -14,193 +14,367 @@
 
 </div>
 
+
+
+### 🔗 Project Links
+
+🌍 **[Live Application](https://networx-frontend.vercel.app/)**
+
+💻 **[Frontend Repository](https://github.com/amanbansal1506/networx-frontend)**
+
+⚙️ **[Backend Repository](https://github.com/amanbansal1506/networx-backend)**
+
 ---
 
-## 📖 Overview
+## 📖 Project Overview
 
-NetworX is a social networking application built to explore real-world backend and full-stack concepts such as users, connections, posts, messaging, and conversations. It combines a relational PostgreSQL data model, JWT/session-based authentication, a Redis caching layer for read-heavy workloads, a Java Spring Boot microservice.
+NetworX is designed to provide a simple and interactive professional networking experience.
 
-This repository includes the database schema backup required to run the project locally.
+The application allows users to build their professional identity, share posts, engage with other users, and manage professional connections.
 
-## Features
+The project follows a client-server architecture, with a Next.js frontend communicating with a RESTful backend built using Express.js and PostgreSQL.
 
-- **User authentication** with sessions / JWT
-- **Connections**: send connection requests, accept them, and build a network
-- **Posts and comments** with a personalized, paginated feed
-- **Messaging** with conversations and realtime typing indicators
-- **Profiles** with About, Education, and Work sections
-- **Jobs** listing and job / experience details
-- **Redis caching** for feed, profile, and jobs data
+### Project Objectives
+
+- Develop a functional full-stack web application.
+- Implement secure user authentication.
+- Design and integrate RESTful APIs.
+- Manage relational data using PostgreSQL.
+- Build a responsive, reusable frontend.
+- Deploy the application using cloud hosting services.
+
+---
+
+## ✨ Features
+
+### 🔐 User Authentication
+
+- User registration and login
+- Password hashing using bcrypt
+- JWT-based authentication
+- Cookie-based session management
+- Protected application routes
+- User logout
+
+### 👤 Professional Profiles
+
+- View and update profile information
+- Add professional headlines and biographies
+- Manage skills
+- Add educational qualifications
+- Add work experience
+- View other users' profiles
+
+### 📝 Posts and Feed
+
+- Create and publish text posts
+- Browse posts on the homepage
+- Like and unlike posts
+- Comment on posts
+- Interact with content shared by other users
+
+### 🤝 Professional Networking
+
+- Discover registered users
+- Send connection requests
+- Accept or reject connection requests
+- Manage professional connections
+- View network activity
+
+### 🔔 Notifications
+
+- View notifications related to account activity
+- Track networking interactions
+- Manage notification status
+
+### 🔎 User Search
+
+- Search for users
+- Discover professional profiles
+- Navigate to user profile pages
+
+### 📱 Responsive Interface
+
+- Clean and minimal user interface
+- Desktop and mobile-friendly layouts
+- Reusable React components
+- Consistent navigation
+
+---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
+| Category | Technologies |
 |---|---|
-| Frontend | React / Next.js |
-| Backend | Node.js / Express |
+| Frontend | Next.js, React.js |
+| Programming Language | JavaScript |
+| Styling | CSS |
+| Backend | Node.js, Express.js |
 | Database | PostgreSQL |
-| Auth | Sessions / JWT |
-| Microservice | Java Spring Boot |
-| Caching & realtime signals | Redis (since 2 Feb 2026) |
+| Authentication | JWT, bcrypt, HTTP Cookies |
+| Database Hosting | Neon |
+| Backend Deployment | Render |
+| Frontend Deployment | Vercel |
+| Version Control | Git, GitHub |
 
-## 🧭 Architecture: Feed Read Path
+---
 
-```mermaid
-flowchart LR
-    A["Client<br/>(React / Next.js)"] --> B["Express API"]
-    B --> C{"Redis<br/>cache hit?"}
-    C -->|"hit (~20 ms)"| D["Return cached feed"]
-    C -->|"miss (~500 ms)"| E["PostgreSQL queries"]
-    E --> F["Spring Boot<br/>microservice"]
-    F --> G["Enriched, paginated feed"]
-    G --> H["Store in Redis<br/>(TTL: 15 min)"]
-    G --> I["Return feed"]
+## 🏗️ System Architecture
+
+```text
+            User / Web Browser
+                    |
+                    v
+          Next.js + React Frontend
+                 (Vercel)
+                    |
+                    | REST API Requests
+                    v
+           Node.js + Express.js
+                 (Render)
+                    |
+                    | SQL Queries
+                    v
+             PostgreSQL Database
+                   (Neon)
 ```
 
-## ⚡ Redis: Caching, Realtime Signals, and Feed Acceleration
+### How It Works
 
-From 2 Feb 2026 onwards, Redis is used in NetworX as a high-speed, in-memory layer to reduce PostgreSQL load, accelerate feed reads, and power short-lived realtime signals without writing transient state to the database.
+1. The user interacts with the Next.js frontend.
+2. The frontend communicates with the Express.js backend through API requests.
+3. The backend validates requests and executes application logic.
+4. PostgreSQL stores user information, posts, comments, and connections.
+5. The backend returns responses that are displayed in the frontend.
 
-### Why Redis here?
+Authentication uses JWT tokens stored in cookies.
 
-- Feed generation is read-heavy and expensive to recompute (connections → posts → enrichment → pagination).
-- Profile and connection data are reused across many APIs.
-- Realtime UX (for example, typing indicators) should not touch the database.
-- Like counts are frequently read but rarely changed.
+---
 
-### What we cache
+## 📁 Project Structure
 
-| Use case | Key pattern | TTL | Purpose |
-|---|---|---|---|
-| Feed | `feed:connections:{user_id}:{limit}:{offset}` | 15 min | Cache the fully enriched, paginated feed (fan-out-on-read optimization) |
-| User profile | `profile:{user_id}` | 5–10 min | Avoid repeated profile lookups during feed and comment rendering |
-| Profile: About | `profile:about:{user_id}` | 15 min | Reused for profile viewing |
-| Profile: Education | `profile:edu:{user_id}` | 15 min | Reused for profile viewing |
-| Profile: Work | `profile:work:{user_id}` | 15 min | Reused for profile viewing |
-| Jobs | `jobs:{user_id}:{limit}:{offset}` | 15 min | Cache the paginated jobs list |
+The project is organized into two separate repositories.
 
-### Performance benchmarks
+### Frontend
 
-| Metric | Without Redis | With Redis (cache hit) |
-|---|---|---|
-| Response time | ~500 ms | **~20 ms** ⚡ |
-| DB queries per request | 2–3 | **0** |
-| Microservice calls per request | 1 | **0** |
-| Improvement | n/a | **~25x faster** |
+```text
+networx-frontend/
+│
+├── app/
+│   ├── sign-in/
+│   ├── sign-up/
+│   ├── (dashboard)/
+│   │   ├── home/
+│   │   ├── profile/
+│   │   ├── mynetwork/
+│   │   ├── search/
+│   │   └── notifications/
+│   ├── layout.jsx
+│   └── globals.css
+│
+├── components/
+├── context/
+├── lib/
+├── public/
+├── package.json
+└── next.config.mjs
+```
 
-A cache miss costs about the same as an uncached request (~500 ms) and populates the cache for subsequent requests.
+### Backend
 
-### Optimizing the cache hit rate
+```text
+networx-backend/
+│
+├── routes/
+├── middleware/
+├── db/
+├── scripts/
+├── utils/
+├── test/
+│
+├── app.js
+├── server.js
+├── package.json
+└── docker-compose.yml
+```
 
-- **Use consistent pagination:** encourage standard `limit` values (10, 20, 50).
-- **Monitor cache stats:** track hit/miss ratios.
-- **Adjust TTLs:** balance freshness against performance.
-- **Pre-warm the cache:** cache feeds for active users during off-peak hours.
+The frontend uses reusable React components, while the backend separates API routes, middleware, database operations, and utility functions.
 
-## 🗄️ Database Setup
+---
 
-The project ships with a PostgreSQL SQL file that defines the **entire database structure** required for the application to run.
-
-**The SQL file contains:**
-
-- Tables
-- Columns and data types
-- Primary keys and foreign keys
-- Indexes
-- Sequences
-- Triggers and functions
-
-> ⚠️ The file may also contain demo/sample data. This is intentional, for development convenience.
-
-### Key tables
-
-| Table | Description |
-|---|---|
-| `users` | User profiles and authentication data |
-| `posts` | User posts |
-| `comments` | Post comments |
-| `connections` | Accepted user connections |
-| `connection_requests` | Pending connection requests |
-| `messages` | Chat messages |
-| `conversations` | User conversations |
-| `education` | Education details |
-| `jobs` | Job / experience details |
-| `session` | Session tracking |
-
-## 🚀 Getting Started (Local Setup)
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js
-- PostgreSQL (with `psql` or pgAdmin)
-- Redis and FFmpeg (for the caching and video streaming features)
+Make sure the following tools are installed:
 
-### 1. Clone the repository
+- Node.js (version 20 or later)
+- npm
+- PostgreSQL
+- Git
 
-```bash
-git clone https://github.com/amanbansal1506/NetworX.git
-cd NetworX
-```
+### 1. Clone the repositories
 
-### 2. Create a PostgreSQL database
-
-```sql
-CREATE DATABASE NetworX;
-```
-
-### 3. Restore the database schema
-
-**Using `psql`:**
+**Frontend:**
 
 ```bash
-psql -U postgres -d NetworX -f NetworX_schema.sql
+git clone https://github.com/amanbansal1506/networx-frontend.git
 ```
 
-**Or using pgAdmin:**
+**Backend:**
 
-1. Create an empty database named `NetworX`.
-2. Right-click the database and select **Restore**.
-3. Select `NetworX_schema.sql`.
-4. Click **Restore**.
+```bash
+git clone https://github.com/amanbansal1506/networx-backend.git
+```
 
-### 4. Configure environment variables
+### 2. Backend Setup
 
-Create a `.env` file in the backend root:
+Navigate to the backend directory:
+
+```bash
+cd networx-backend
+npm install
+```
+
+Create a `.env` file:
 
 ```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=NetworX
-DB_USER=postgres
-DB_PASSWORD=your_password
+DATABASE_URL=your_postgresql_connection_string
+JWT_SECRET=your_secure_jwt_secret_minimum_32_characters
+FRONTEND_URL=http://localhost:3000
+NODE_ENV=development
+PORT=8000
 ```
 
-### 5. Run the backend
+Initialize the PostgreSQL database:
 
 ```bash
-npm install
+npm run repair
+```
+
+Start the backend:
+
+```bash
 npm run dev
 ```
 
-> **Note:** The backend and the microservice have their own dedicated repositories. Clone those as well for the complete project to work. This repository will be merged with them once development is complete.
+The backend runs at:
 
-## 🧠 Notes for Contributors
+`http://localhost:8000`
 
-- The database schema is version-controlled via SQL, not migrations.
-- If you modify the schema, regenerate the SQL backup before committing.
-- For production setups, consider splitting `schema.sql` and `seed.sql`.
+Health check:
 
-## 📜 License
+`http://localhost:8000/health`
 
-This project is for educational and learning purposes.
+### 3. Frontend Setup
 
-## 🙌 Acknowledgements
+Open another terminal and navigate to the frontend directory:
 
-Inspired by real-world social networking platforms to practice scalable backend and database design.
+```bash
+cd networx-frontend
+npm install
+```
 
-## 👤 Author
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_HOST_IP=http://localhost:8000
+```
+
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+Open:
+
+`http://localhost:3000`
+
+**Note:** Never commit database passwords, JWT secrets, or environment files containing credentials to GitHub.
+
+---
+
+## ☁️ Deployment
+
+NetworX is deployed using a three-service architecture.
+
+| Service | Purpose |
+|---|---|
+| Vercel | Hosts the Next.js frontend |
+| Render | Hosts the Node.js/Express API |
+| Neon | Provides managed PostgreSQL hosting |
+
+### Live Application
+
+**https://networx-frontend.vercel.app/**
+
+Production configuration uses environment variables and HTTPS. Authentication requests must be configured to handle cookies correctly across browsers; a same-origin API proxy can be used to avoid third-party cookie restrictions.
+
+---
+
+## 🔒 Security
+
+The application uses several authentication and security practices:
+
+- Password hashing using bcrypt
+- JWT-based authorization
+- Authentication middleware for protected routes
+- Cookie-based authentication
+- Environment variables for sensitive configuration
+- Server-side input validation
+
+NetworX is primarily a learning and portfolio project and is not presented as a production-hardened commercial service.
+
+---
+
+## 📈 Future Enhancements
+
+The following features are planned for future development:
+
+- [ ] Upload and update profile pictures
+- [ ] Add images to posts
+- [ ] Direct messaging between connected users
+- [ ] Jobs and opportunities module
+- [ ] Additional profile customization
+- [ ] Improved user experience and accessibility
+
+Messaging and Jobs currently have placeholder pages rather than fully implemented backend functionality.
+
+---
+
+## 💡 Key Learnings
+
+Developing NetworX provided hands-on experience with:
+
+- Building full-stack applications using JavaScript
+- Implementing RESTful API communication
+- Managing authentication and authorization
+- Designing and querying relational databases
+- Creating reusable frontend components
+- Handling API errors and debugging backend issues
+- Managing database schema changes
+- Deploying applications to cloud platforms
+- Resolving cross-domain authentication and cookie issues
+
+The project strengthened my understanding of how frontend applications, backend services, and databases work together.
+
+---
+
+## 👨‍💻 Author
 
 **Aman Bansal**
 
-[![GitHub](https://img.shields.io/badge/GitHub-amanbansal1506-181717?logo=github&logoColor=white)](https://github.com/amanbansal1506)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-aman--bansal-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/aman-bansal-464b6a270/)
+Software Developer | Full-Stack Development Enthusiast
+
+**GitHub:** [github.com/amanbansal1506](https://github.com/amanbansal1506)
+
+**Live Project:** [NetworX](https://networx-frontend.vercel.app/)
+
+---
+
+### ⭐ Support
+
+If you find this project interesting, consider giving the repository a star!
+
+*Built as a personal full-stack development and learning project.*
